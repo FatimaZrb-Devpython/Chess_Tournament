@@ -1,17 +1,18 @@
-import json 
-import os
-from player import Player
+import sys
+sys.path.append("..")
+
+from view.player import players  # Importez la liste de joueurs du fichier player.py
 
 class Match:
     
-    def __init__(self, player1, player2):
+    def __init__(self, player1, player2, score_player1=0, score_player2=0):
         self.players = [player1, player2]
-        self.scores = {player1: 0, player2: 0}
+        self.scores = {player1: score_player1, player2: score_player2}
 
     def set_winner(self, winner):
         loser = next(player for player in self.players if player != winner)
-        self.scores[winner] = 1
-        self.scores[loser] = 0
+        self.scores[winner] += 1  # Mis à jour du score gagnant
+        self.scores[loser] = 0    # Réinitialiser le score du perdant
 
     def set_draw(self):
         for player in self.players:
@@ -23,22 +24,23 @@ class Match:
             "scores": self.scores
         }
 
-    @classmethod
-    def from_dict(cls, data):
-        player1 = Player(**data["players"][0])
-        player2 = Player(**data["players"][1])
-        match = cls(player1, player2)
-        match.scores = data["scores"]
-        return match
 
-    def save_to_json(self, name):
-        # Construire le chemin du dossier de la catégorie
-        category_folder = "./tournament/"
 
-        # Créer le dossier de la catégorie s'il n'existe pas
-        os.makedirs(category_folder, exist_ok=True)
 
-        # Construire le chemin du fichier dans le dossier de la catégorie
-        file_path = os.path.join(category_folder, f"{name}.json")
-        with open(file_path, "w") as file:
-            json.dump(self.to_dict(), file)
+# Récupérez les deux premiers joueurs de la liste pour tester la classe Match
+player1, player2 = players[:2]
+
+# Utilisez ces instances pour créer une instance de la classe Match avec des scores initiaux
+match = Match(player1, player2, score_player1=1, score_player2=0)
+
+# Utilisez la méthode to_dict() pour obtenir les informations du match sous forme de dictionnaire
+match_info = match.to_dict()
+
+# Affichez les informations du match
+print("Informations du match :")
+print("Joueurs :")
+for player_info in match_info["players"]:
+    print(f"  Nom : {player_info['last_name']} {player_info['first_name']}")
+print("Scores :")
+for player, score in match_info["scores"].items():
+    print(f"  {player.first_name} {player.last_name} : {score}")

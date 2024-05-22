@@ -5,12 +5,13 @@ sys.path.append("..")
 from models.player import Player
 
 class PlayerController:
-    def __init__(self, player_repository):
+    def __init__(self, player_repository=None):
         self.player_repository = player_repository
 
     def add_player(self, first_name, last_name, date_of_birth):
         player = Player(first_name, last_name, date_of_birth)
-        self.player_repository.add_player(player)
+        if self.player_repository:
+            self.player_repository.add_player(player)
 
     def generate_player_json(self, first_name, last_name, date_of_birth, file_path):
         player_data = {
@@ -23,4 +24,6 @@ class PlayerController:
             json.dump(player_data, file)
 
     def get_all_players(self):
-        return self.player_repository.get_all_players()
+        if self.player_repository:
+            return self.player_repository.get_all_players()
+        return []

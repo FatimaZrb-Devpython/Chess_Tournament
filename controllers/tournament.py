@@ -14,12 +14,11 @@ class TournamentController:
 
     def add_tournament(self, name, location, start_date, end_date, description):
         tournament = ChessTournament(name, location, start_date, end_date, description=description)
+        self.save_tournament(tournament)
+        return tournament
+    
+    def save_tournament(self, tournament):
         tournament_filename = f"{self.tournaments_folder}/{tournament.name.replace(' ', '_').lower()}.json"
         with open(tournament_filename, "w") as file:
             json.dump(tournament.to_dict(), file)
-        print(f"Tournoi enregistré dans {tournament_filename}")
-    
-    
-    
-        
-        
+        print(f"Tournoi mis à jour dans {tournament_filename}")

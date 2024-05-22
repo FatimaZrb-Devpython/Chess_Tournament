@@ -1,4 +1,12 @@
+import sys
+sys.path.append("..")
+
+from models.round import Round
+
 class RoundView:
+    def __init__ (self):
+        self.round_instance = Round()
+
     def display_round_info(self):
         if self.round_instance is None:
             print("Aucune information sur le tour disponible.")
@@ -9,7 +17,7 @@ class RoundView:
         print(f"Date et heure de fin: {self.round_instance.end_datetime}")
         print("Matches:")
         for match in self.round_instance.matches:
-            print(f"- {match.players[0].first_name} vs {match.players[1].first_name}")
+            print(f"- {match.player[0].first_name} vs {match.player[1].first_name}")
             
     def get_round_input(self):
         round = input("Entrez le round: ")
